@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Private Game</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Lock screen: the only thing visible until the right code is entered -->
+  <main id="lock" class="lock">
+    <div class="lock-box">
+      <h1>Enter access code</h1>
+      <p>This game is private. Type the secret code to play.</p>
+      <div class="field">
+        <input id="code" type="password" inputmode="numeric" autocomplete="off" placeholder="Code" aria-label="Access code">
+        <button id="unlock" type="button">Unlock</button>
+      </div>
+      <p id="error" class="error" role="alert" hidden>Wrong code. Try again.</p>
+    </div>
+  </main>
+
+  <!-- Game screen: the iframe has no src until unlocked, so nothing loads early -->
+  <section id="game" class="game" hidden>
+    <header class="bar">
+      <span>Now playing</span>
+      <div>
+        <button id="fullscreen" type="button">Fullscreen</button>
+        <button id="lockAgain" type="button">Lock</button>
+      </div>
+    </header>
+    <iframe id="frame" title="Game" allow="fullscreen; autoplay; gamepad"></iframe>
+  </section>
+
+  <script src="script.js"></script>
+</body>
+</html>
