@@ -110,37 +110,10 @@
 
       document.querySelector("#unity-loading-bar").style.display = "block";
 
-      // The .wasm exceeds GitHub's 25MB web upload limit, so it is stored
-      // as chunks and reassembled here.
-      function loadWasmChunks() {
-        var parts = [
-          buildUrl + "/Definite Web Build.wasm.p0",
-          buildUrl + "/Definite Web Build.wasm.p1",
-          buildUrl + "/Definite Web Build.wasm.p2"
-        ];
-        return Promise.all(parts.map(function(url) {
-          return fetch(url).then(function(r) {
-            if (!r.ok) throw new Error("Failed to load " + url + " (" + r.status + ")");
-            return r.arrayBuffer();
-          });
-        })).then(function(buffers) {
-          var total = buffers.reduce(function(s, b) { return s + b.byteLength; }, 0);
-          var combined = new Uint8Array(total);
-          var offset = 0;
-          buffers.forEach(function(b) {
-            combined.set(new Uint8Array(b), offset);
-            offset += b.byteLength;
-          });
-          return URL.createObjectURL(new Blob([combined], { type: "application/wasm" }));
-        });
-      }
-
       var script = document.createElement("script");
       script.src = loaderUrl;
       script.onload = () => {
-        loadWasmChunks().then((wasmUrl) => {
-          config.codeUrl = wasmUrl;
-          createUnityInstance(canvas, config, (progress) => {
+        createUnityInstance(canvas, config, (progress) => {
           document.querySelector("#unity-progress-bar-full").style.width = 100 * progress + "%";
               }).then((unityInstance) => {
                 document.querySelector("#unity-loading-bar").style.display = "none";
@@ -151,10 +124,7 @@
               }).catch((message) => {
                 alert(message);
               });
-        }).catch((err) => {
-          alert("Failed to load game data: " + err.message);
-        });
-      };
+            };
 
       document.body.appendChild(script);
 
